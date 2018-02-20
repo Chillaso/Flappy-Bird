@@ -85,7 +85,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         if(play)
         {
             //----TAP PLAY----
-            sprite.setY((int) (sprite.getY() - (sprite.getYSPEED() * sprite.getYSPEED() * 0.7)));
+
+            sprite.velocidad=sprite.salto;
+
             if(sonidoAla != -1)
             {
                 sound.play(sonidoAla,1,1,1,0,1);

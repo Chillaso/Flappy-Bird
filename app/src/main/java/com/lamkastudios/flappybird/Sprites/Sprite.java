@@ -19,9 +19,12 @@ public class Sprite
 
     //----ATRIBUTOS SPRITE---
     private float x,y;
-    private final int YSPEED=15;
-    private float rotation=0;
-    private static boolean choque;
+
+    //----ATRIBUTOS FISICAS----
+    public float velocidad=0;
+    public float gravedad=1;
+    public float salto=-13;
+    private float rotacion=0;
 
     //-----CONT PUNTOS-------
     private int punto;
@@ -30,7 +33,6 @@ public class Sprite
     {
         this.game = game;
         this.btp = btp;
-        choque=false;
         currentFrame=0;
 
         //DIMENSIONES DE SPRITE
@@ -54,7 +56,9 @@ public class Sprite
         comprobarPunto();
 
         //----FISICAS----
-        y+= YSPEED;
+        velocidad+=gravedad;
+        y+=velocidad;
+        rotacion=Math.min((velocidad/10)*90,90);
 
         //----FRAME DE VUELO----
         currentFrame = ++currentFrame % FRAMES;
@@ -106,7 +110,7 @@ public class Sprite
     private boolean isDentro(float x1, float yArriba, float yAbajo,float pwi)
     {
         if((x1 > x && x1 < x+width && y < yArriba) || (x1 > x && x1 < x+width && y > yAbajo)
-                || (x1+pwi > x && x1+pwi < x+width && y < yArriba) || (x1+pwi > x && x1+pwi < x+width && y > yAbajo-height))
+                || (x1+pwi > x && x1+pwi < x+width && y < yArriba)) //|| (x1+pwi > x && x1+pwi < x+width && y > yAbajo-height))
             return true;
         else
             return false;
@@ -122,10 +126,6 @@ public class Sprite
 
     public void setY(int y) {
         this.y = y;
-    }
-
-    public int getYSPEED() {
-        return YSPEED;
     }
 
     public int getWidth() {
