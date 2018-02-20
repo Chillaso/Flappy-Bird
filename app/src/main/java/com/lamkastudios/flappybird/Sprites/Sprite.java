@@ -19,8 +19,9 @@ public class Sprite
 
     //----ATRIBUTOS SPRITE---
     private float x,y;
-    protected final int YSPEED=15;
-    public static boolean choque;
+    private final int YSPEED=15;
+    private float rotation=0;
+    private static boolean choque;
 
     //-----CONT PUNTOS-------
     private int punto;
