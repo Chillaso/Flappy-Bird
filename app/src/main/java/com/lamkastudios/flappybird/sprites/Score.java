@@ -36,11 +36,11 @@ public class Score {
     private void update()
     {
         puntuacion = game.getPunto().getContPuntos();
-        if(puntuacion > 10)
+        if(puntuacion > 10 && puntuacion < 25)
             medalla = 0;
-        else if(puntuacion > 25)
+        else if(puntuacion > 25 && puntuacion < 50)
             medalla=1;
-        else if(puntuacion > 50)
+        else if(puntuacion > 50 && puntuacion < 99)
             medalla=2;
         else if(puntuacion > 99)
             medalla=3;
