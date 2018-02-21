@@ -4,13 +4,10 @@ package com.lamkastudios.flappybird.Sprites;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.util.Log;
 
 import com.lamkastudios.flappybird.Vista.GameView;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 public class Punto {
 
@@ -49,6 +46,10 @@ public class Punto {
             //Pinto
             c.drawBitmap(listaPuntos.get(pos),medioX+(listaPuntos.get(pos).getWidth()*i),medioY,null);
         }
+    }
+
+    public int getContPuntos() {
+        return contPuntos;
     }
 
     public void setContPuntos(int contPuntos) {

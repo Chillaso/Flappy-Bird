@@ -17,13 +17,13 @@ import com.lamkastudios.flappybird.R;
 import com.lamkastudios.flappybird.Sprites.Background;
 import com.lamkastudios.flappybird.Sprites.Pipe;
 import com.lamkastudios.flappybird.Sprites.Punto;
+import com.lamkastudios.flappybird.Sprites.Replay;
+import com.lamkastudios.flappybird.Sprites.Score;
 import com.lamkastudios.flappybird.Sprites.Sprite;
 import com.lamkastudios.flappybird.Sprites.Suelo;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback
 {
@@ -49,6 +49,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     private int sonidoAla;
     private int sonidoChoque;
     private int sonidoPunto;
+
+    private Score score;
+    private Replay replay;
 
     public GameView(MainActivity m,Context context)
     {
@@ -82,10 +85,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
-        if(play)
+        if(play && !gameOver)
         {
             //----TAP PLAY----
-
             sprite.velocidad=sprite.salto;
 
             if(sonidoAla != -1)
@@ -94,12 +96,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
             }
         }
         //----FIRST CLICK----
-        else
+        else if(!play)
         {
             loop.start();
             play=true;
         }
-        if(gameOver)
+        //-----GAMEOVER AND REPLAY----
+        if(gameOver && replay.isDentro(event.getX(),event.getY()))
             rePlay();
         return super.onTouchEvent(event);
     }
@@ -154,6 +157,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         puntos.add(ocho);
         puntos.add(nueve);
         punto = new Punto(this,puntos,0);
+
+        //----FINAL----
+        Bitmap btpscore = BitmapFactory.decodeResource(getResources(),R.drawable.score);
+        int xx = (getWidth()/2)-(btpscore.getWidth()/2);
+        int yy = (getHeight()/2)-btpscore.getHeight()/2;
+        score = new Score(this,btpscore,xx,yy);
+
+        float xxR = (getWidth()/2)-(btpscore.getWidth()/2)+(btpscore.getWidth()/4);
+        float yyR = (getHeight()/2)-btpscore.getHeight()/2+(btpscore.getHeight());
+        replay = new Replay(BitmapFactory.decodeResource(getResources(),R.drawable.replay),xxR,yyR);
     }
 
     private void cargarMapa()
@@ -179,7 +192,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 
         pipes.add(new Pipe(this, pAbajo, pArriba,distancia,pUp.getHeight()-getHeight()/2f));
         pipes.add(new Pipe(this, pAbajo, pArriba,distancia+GAP,pUp.getHeight()-getHeight()/2.2f));
-        Log.d(TAG, "cargarMapa: "+(pUp.getHeight()-getHeight()/2.2f));
         pipes.add(new Pipe(this, pAbajo, pArriba,distancia+GAP*2,pUp.getHeight()-getHeight()/2.123f));
     }
 
@@ -216,14 +228,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     public void gameOver()
     {
         loop.interrupt();
-        Bitmap gameover = BitmapFactory.decodeResource(getResources(),R.drawable.gameover);
 
-        int ancho = (getWidth()/2)-(gameover.getWidth()/2);
-        int alto = (getHeight()/2)-gameover.getHeight()/2;
-
-        c.drawBitmap(gameover,ancho,alto,null);
+        score.onDraw(c);
+        replay.onDraw(c);
         gameOver=true;
-        //Espero un poco para que no sea un instaplay
     }
 
     public void rePlay()

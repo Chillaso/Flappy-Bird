@@ -22,7 +22,7 @@ public class Sprite
 
     //----ATRIBUTOS FISICAS----
     public float velocidad=0;
-    public float gravedad=1;
+    private float gravedad=1;
     public float salto=-13;
     private float rotacion=0;
 
@@ -62,6 +62,7 @@ public class Sprite
 
         //----FRAME DE VUELO----
         currentFrame = ++currentFrame % FRAMES;
+
         //---BITMAP ACTUAL----
         btp = BitmapFactory.decodeResource(game.getResources(),game.BIRDRESOURCES[currentFrame]);
     }
@@ -69,6 +70,7 @@ public class Sprite
     public void onDraw(Canvas c)
     {
         update();
+
         c.drawBitmap(btp,x,y,null);
     }
 
@@ -110,8 +112,9 @@ public class Sprite
     private boolean isDentro(float x1, float yArriba, float yAbajo,float pwi)
     {
         if((x1 > x && x1 < x+width && y < yArriba) || (x1 > x && x1 < x+width && y > yAbajo)
-                || (x1+pwi > x && x1+pwi < x+width && y < yArriba)) //|| (x1+pwi > x && x1+pwi < x+width && y > yAbajo-height))
+                || (x1+pwi > x && x1+pwi < x+width && y < yArriba) || (x1+pwi > x && x1+pwi < x+width && y >= yAbajo-height/3)) {
             return true;
+        }
         else
             return false;
     }
