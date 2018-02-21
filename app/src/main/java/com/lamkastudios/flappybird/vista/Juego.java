@@ -25,4 +25,10 @@ public class Juego extends Activity {
         m.setBackgroundColor(Color.BLACK);
         setContentView(m);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }
