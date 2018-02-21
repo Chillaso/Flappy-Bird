@@ -37,7 +37,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     private final double ANCHO =0.1;
     private final double ALTO=0.1;
     public final static int GAP = 500;
-    public final static int VELOCIDAD = 10;
+    public static int VELOCIDAD = 10;
 
     //----FLAGS-----
     private boolean play;

@@ -57,6 +57,8 @@ public class Pipe {
                 //DIFICULTAD DEL JUEGO PROGRESIVA
                 if(realGAP <=3.5)
                     realGAP+=0.1f;
+                if(game.getPunto().getContPuntos() > 50)
+                    GameView.VELOCIDAD+=0.1;
             }
         }
     }
