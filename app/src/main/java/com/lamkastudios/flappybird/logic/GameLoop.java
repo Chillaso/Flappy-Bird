@@ -1,8 +1,8 @@
-package com.lamkastudios.flappybird.Logic;
+package com.lamkastudios.flappybird.logic;
 
 import android.graphics.Canvas;
 
-import com.lamkastudios.flappybird.Vista.GameView;
+import com.lamkastudios.flappybird.vista.GameView;
 
 public class GameLoop extends Thread {
 

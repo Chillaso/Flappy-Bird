@@ -1,10 +1,10 @@
-package com.lamkastudios.flappybird.Sprites;
+package com.lamkastudios.flappybird.sprites;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import com.lamkastudios.flappybird.Vista.GameView;
+import com.lamkastudios.flappybird.vista.GameView;
 
 import java.util.ArrayList;
 
@@ -16,6 +16,7 @@ public class Sprite
     private int currentFrame;
     private final int FRAMES = 3;
     private int width,height;
+    private boolean noche;
 
     //----ATRIBUTOS SPRITE---
     private float x,y;
@@ -24,16 +25,18 @@ public class Sprite
     public float velocidad=0;
     private float gravedad=1;
     public float salto=-13;
-    private float rotacion=0;
+    //private float rotacion=0;
 
     //-----CONT PUNTOS-------
     private int punto;
 
-    public Sprite(GameView game, Bitmap btp)
+    public Sprite(GameView game, Bitmap btp, boolean noche)
     {
         this.game = game;
         this.btp = btp;
+        this.noche=noche;
         currentFrame=0;
+        punto=0;
 
         //DIMENSIONES DE SPRITE
         width=btp.getWidth();
@@ -42,9 +45,6 @@ public class Sprite
         //-----POSICIÓN DE INICIO-----
         x=game.getWidth()/2.2f;
         y=game.getHeight()/1.8f;
-
-        punto=0;
-
     }
 
     private void update()
@@ -58,37 +58,40 @@ public class Sprite
         //----FISICAS----
         velocidad+=gravedad;
         y+=velocidad;
-        rotacion=Math.min((velocidad/10)*90,90);
+        //rotacion=Math.min((velocidad/10)*90,90);
 
         //----FRAME DE VUELO----
         currentFrame = ++currentFrame % FRAMES;
 
         //---BITMAP ACTUAL----
-        btp = BitmapFactory.decodeResource(game.getResources(),game.BIRDRESOURCES[currentFrame]);
+        if(!noche)
+            btp = BitmapFactory.decodeResource(game.getResources(),game.BIRDRESOURCES[currentFrame]);
+        else
+            btp = BitmapFactory.decodeResource(game.getResources(),game.NBIRDRESOURCES[currentFrame]);
     }
 
     public void onDraw(Canvas c)
     {
         update();
-
         c.drawBitmap(btp,x,y,null);
     }
 
     private void comprobarColision()
     {
-        //Suelo y techo
+        //-----SUELO-----
         if(y > game.getHeight()-height || y > Suelo.y-(height/2)) {
-            game.sonidoChoque();
+            if(game.getSonido()!=null)
+                game.getSonido().playHit();
             game.gameOver();
         }
-
+        //----PIPES-----
         ArrayList<Pipe> pipes = game.getPipes();
         for(Pipe p : pipes)
         {
             if(isDentro(p.getX(),p.yArriba(),p.yAbajo(),p.getWidthArriba()))
             {
-                //Reproducir sonidos
-                game.sonidoChoque();
+                if(game.getSonido()!=null)
+                    game.getSonido().playHit();
                 game.gameOver();
             }
         }
@@ -104,7 +107,8 @@ public class Sprite
                 punto++;
                 p.setPunto(true);
                 game.getPunto().setContPuntos(punto);
-                game.sonidoPunto();
+                if(game.getSonido()!=null)
+                    game.getSonido().playPoint();
             }
         }
     }
@@ -123,19 +127,4 @@ public class Sprite
         return x;
     }
 
-    public float getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 }

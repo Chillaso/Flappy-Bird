@@ -1,11 +1,11 @@
-package com.lamkastudios.flappybird.Sprites;
+package com.lamkastudios.flappybird.sprites;
 //Created by chillaso All rights reserved.
 
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import com.lamkastudios.flappybird.Vista.GameView;
+import com.lamkastudios.flappybird.vista.GameView;
 
 import java.util.ArrayList;
 

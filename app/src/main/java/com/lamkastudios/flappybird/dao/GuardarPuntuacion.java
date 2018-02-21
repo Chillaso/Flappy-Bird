@@ -1,4 +1,4 @@
-package com.lamkastudios.flappybird.DAO;
+package com.lamkastudios.flappybird.dao;
 //Created by chillaso All rights reserved.
 
 
@@ -6,14 +6,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
-import com.lamkastudios.flappybird.Vista.MainActivity;
+import com.lamkastudios.flappybird.vista.Juego;
 
 public class GuardarPuntuacion extends AsyncTask<Void,Integer,Boolean>{
 
-    private MainActivity m;
+    private Juego m;
     private int puntuacion;
 
-    public GuardarPuntuacion(MainActivity m,int puntuacion) {
+    public GuardarPuntuacion(Juego m, int puntuacion) {
         this.m=m;
         this.puntuacion=puntuacion;
     }

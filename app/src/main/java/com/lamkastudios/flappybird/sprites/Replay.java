@@ -1,4 +1,4 @@
-package com.lamkastudios.flappybird.Sprites;
+package com.lamkastudios.flappybird.sprites;
 //Created by chillaso All rights reserved.
 
 

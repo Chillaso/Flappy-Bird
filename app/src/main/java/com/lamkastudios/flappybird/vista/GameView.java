@@ -1,61 +1,65 @@
-package com.lamkastudios.flappybird.Vista;
+package com.lamkastudios.flappybird.vista;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.media.SoundPool;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.lamkastudios.flappybird.DAO.GuardarPuntuacion;
-import com.lamkastudios.flappybird.Logic.GameLoop;
 import com.lamkastudios.flappybird.R;
-import com.lamkastudios.flappybird.Sprites.Background;
-import com.lamkastudios.flappybird.Sprites.Pipe;
-import com.lamkastudios.flappybird.Sprites.Punto;
-import com.lamkastudios.flappybird.Sprites.Replay;
-import com.lamkastudios.flappybird.Sprites.Score;
-import com.lamkastudios.flappybird.Sprites.Sprite;
-import com.lamkastudios.flappybird.Sprites.Suelo;
+import com.lamkastudios.flappybird.dao.GuardarPuntuacion;
+import com.lamkastudios.flappybird.logic.GameLoop;
+import com.lamkastudios.flappybird.sprites.Background;
+import com.lamkastudios.flappybird.sprites.Pipe;
+import com.lamkastudios.flappybird.sprites.Punto;
+import com.lamkastudios.flappybird.sprites.Replay;
+import com.lamkastudios.flappybird.sprites.Score;
+import com.lamkastudios.flappybird.sprites.Sprite;
+import com.lamkastudios.flappybird.sprites.Suelo;
+import com.lamkastudios.flappybird.util.Sonidos;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback
 {
+    //----ATRIBUTOS VIEW------
     private GameLoop loop;
     private Canvas c;
-    private MainActivity m;
+    private Juego m;
+    private SharedPreferences prefs;
+
+    //-----CONSTANTES DEL JUEGO
+    public final int[] BIRDRESOURCES = new int[]{R.drawable.abajo,R.drawable.medio,R.drawable.arriba};
+    public final int[] NBIRDRESOURCES = new int[]{R.drawable.nabajo,R.drawable.nmedio,R.drawable.narriba};
     private final double ANCHO =0.1;
     private final double ALTO=0.1;
-    public final int[] BIRDRESOURCES = new int[]{R.drawable.abajo,R.drawable.medio,R.drawable.arriba};
-
     public final static int GAP = 500;
     public final static int VELOCIDAD = 10;
+
+    //----FLAGS-----
     private boolean play;
     private boolean gameOver;
 
+    //----SPRITES------
     private Background fondo;
     private Sprite sprite;
     private Suelo suelo;
+    private Bitmap carga;
+    private Score score;
+    private Replay replay;
     private Punto punto;
     private  ArrayList<Pipe> pipes;
     private ArrayList<Bitmap> puntos;
-    private SoundPool sound;
-    private int sonidoAla;
-    private int sonidoChoque;
-    private int sonidoPunto;
+    private ArrayList<Bitmap> medallas;
 
-    private Score score;
-    private Replay replay;
-    private Bitmap carga;
+    //----SONIDOS-----
+    private Sonidos sonido;
 
-    public GameView(MainActivity m,Context context)
+
+    public GameView(Juego m, Context context)
     {
         super(context);
         this.m=m;
@@ -65,7 +69,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         gameOver=false;
         pipes = new ArrayList<>();
         puntos = new ArrayList<>();
-        sonidoAla =-1;
+        medallas= new ArrayList<>();
+        prefs = m.getSharedPreferences("puntuaciones",Context.MODE_PRIVATE);
     }
 
     @Override
@@ -80,7 +85,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         suelo.onDraw(canvas);
         sprite.onDraw(canvas);
         punto.onDraw(canvas);
-
+        //----PANTALLA CARGA----
         if(!play)
             canvas.drawBitmap(carga,getWidth()/2-carga.getWidth()/2,getHeight()/2-carga.getHeight()/2,null);
 
@@ -94,9 +99,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
             //----TAP PLAY----
             sprite.velocidad=sprite.salto;
 
-            if(sonidoAla != -1)
+            if(sonido!=null)
             {
-                sound.play(sonidoAla,1,1,1,0,1);
+                sonido.playWing();
             }
         }
         //----FIRST CLICK----
@@ -113,9 +118,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        cargarSprites();
-        cargarMapa();
-        cargarSonidos();
+        cargarSprites(prefs.getBoolean("modonoche",false));
+        cargarMapa(prefs.getBoolean("modonoche",false));
+        cargarSonidos(prefs.getBoolean("musica",true));
         loop = new GameLoop(this);
     }
 
@@ -130,14 +135,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         loop=null;
     }
 
-    private void cargarSprites()
+
+    private void cargarSprites(boolean noche)
     {
         //------BIRD-------
-        //Cremaos un sprite mid, luego iremos cambiando en el update
-        Bitmap btp = BitmapFactory.decodeResource(getResources(),R.drawable.abajo);
-        int ancho = (int) (getWidth()*ANCHO);
-        int alto = (int) (getHeight()*ALTO);
-        sprite = new Sprite(this,Bitmap.createScaledBitmap(btp,ancho,alto,true));
+        Bitmap btp;
+        if(!noche)
+            btp = BitmapFactory.decodeResource(getResources(), R.drawable.abajo);
+
+        else
+            btp = BitmapFactory.decodeResource(getResources(), R.drawable.nabajo);
+
+        int ancho = (int) (getWidth() * ANCHO);
+        int alto = (int) (getHeight() * ALTO);
+        sprite = new Sprite(this, Bitmap.createScaledBitmap(btp, ancho, alto, true),noche);
+
 
         //---PUNTOS-----
         Bitmap cero = BitmapFactory.decodeResource(getResources(),R.drawable.p0);
@@ -171,12 +183,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         float xxR = (getWidth()/2)-(btpscore.getWidth()/2)+(btpscore.getWidth()/4);
         float yyR = (getHeight()/2)-btpscore.getHeight()/2+(btpscore.getHeight());
         replay = new Replay(BitmapFactory.decodeResource(getResources(),R.drawable.replay),xxR,yyR);
+
+        //----MEDALLA----
+        Bitmap bronce = BitmapFactory.decodeResource(getResources(),R.drawable.bronce);
+        Bitmap plata = BitmapFactory.decodeResource(getResources(),R.drawable.plata);
+        Bitmap oro = BitmapFactory.decodeResource(getResources(),R.drawable.oro);
+        Bitmap platino = BitmapFactory.decodeResource(getResources(),R.drawable.platino);
+        medallas.add(bronce);
+        medallas.add(plata);
+        medallas.add(oro);
+        medallas.add(platino);
     }
 
-    private void cargarMapa()
+    private void cargarMapa(boolean noche)
     {
         //------FONDO------
-        Bitmap btp = BitmapFactory.decodeResource(getResources(),R.drawable.bgd);
+        Bitmap btp;
+        if(!noche)
+            btp = BitmapFactory.decodeResource(getResources(),R.drawable.bgd);
+        else
+            btp = BitmapFactory.decodeResource(getResources(),R.drawable.nbackground);
         Bitmap background = Bitmap.createScaledBitmap(btp,this.getWidth(),this.getHeight(),true);
         fondo = new Background(this,background);
 
@@ -186,9 +212,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         suelo = new Suelo(this,sueloRedim);
 
         //-----PIPES-------
-        Bitmap pDown = BitmapFactory.decodeResource(getResources(),R.drawable.pipeup);
+        Bitmap pDown;
+        Bitmap pUp;
+
+        if(!noche)
+        {
+            pDown = BitmapFactory.decodeResource(getResources(),R.drawable.pipeup);
+            pUp = BitmapFactory.decodeResource(getResources(),R.drawable.pipedown);
+        }
+        else
+        {
+            pDown = BitmapFactory.decodeResource(getResources(),R.drawable.nup);
+            pUp = BitmapFactory.decodeResource(getResources(),R.drawable.ndown);
+        }
+
         Bitmap pAbajo = Bitmap.createScaledBitmap(pDown, pDown.getWidth(), getHeight() / 2, true);
-        Bitmap pUp = BitmapFactory.decodeResource(getResources(),R.drawable.pipedown);
         Bitmap pArriba = Bitmap.createScaledBitmap(pUp, pUp.getWidth(), this.getHeight() / 2, true);
 
 
@@ -202,34 +240,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         carga = BitmapFactory.decodeResource(getResources(),R.drawable.carga);
     }
 
-    private void cargarSonidos()
+    private void cargarSonidos(boolean cargar)
     {
-        sound = new SoundPool.Builder().setMaxStreams(2).build();
-
-        try
-        {
-            AssetManager am = m.getAssets();
-            AssetFileDescriptor wing = am.openFd("wing.ogg");
-            sonidoAla = sound.load(wing,1);
-            AssetFileDescriptor choque = am.openFd("hit.ogg");
-            sonidoChoque = sound.load(choque,2);
-            AssetFileDescriptor punto = am.openFd("point.ogg");
-            sonidoPunto = sound.load(punto,2);
-        }
-        catch(IOException e)
-        {
-            Log.e("Error de sonido","Error al cargar el sonido "+e.getMessage());
-        }
-    }
-
-    public void sonidoChoque()
-    {
-        sound.play(sonidoChoque,1,1,2,0,1);
-    }
-
-    public void sonidoPunto()
-    {
-        sound.play(sonidoPunto,1,1,2,0,1);
+        if(cargar)
+            sonido = Sonidos.SonidoBuilder(m);
     }
 
     public void gameOver()
@@ -253,9 +267,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         return pipes;
     }
 
+    public ArrayList<Bitmap> getMedallas() {
+        return medallas;
+    }
+
     public Punto getPunto() {
         return punto;
     }
 
+    public Sonidos getSonido() {
+        return sonido;
+    }
 
+    public SharedPreferences getPrefs() {
+        return prefs;
+    }
 }

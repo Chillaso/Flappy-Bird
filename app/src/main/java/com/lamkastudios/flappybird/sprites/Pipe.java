@@ -1,25 +1,27 @@
-package com.lamkastudios.flappybird.Sprites;
+package com.lamkastudios.flappybird.sprites;
 
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import com.lamkastudios.flappybird.Vista.GameView;
+import com.lamkastudios.flappybird.vista.GameView;
 
 import java.util.Random;
 
 public class Pipe {
 
+    //-----ATRIBUTOS JUEGO-----
+    private GameView game;
     private Bitmap btp;
     private Bitmap btp2;
+    //----ATRIBUTOS PIPE----
     private float x,y;
     private float width;
-
     private int screenHeight;
-    private GameView game;
-    private Random r;
-    private float realGAP = 2.2f;
+    //Modificar para cambiar dificultad
+    private float realGAP = 2.4f;
     private boolean punto;
+    private Random r;
 
     public Pipe(GameView game,Bitmap btp, Bitmap btp2, float x, float y)
     {
@@ -46,15 +48,14 @@ public class Pipe {
         {
             if(p.getX()+ GameView.GAP /2<0)
             {
-                p.x= GameView.GAP *2.5f;//2.5f; //Le asigna la X fuera de la pantalla
-                //-------------EN CAMBIO-----------------------
+                p.x= GameView.GAP *2.5f;
                 p.y = r.nextInt(GameView.GAP)- GameView.GAP /2;
                 if(-(GameView.GAP /realGAP)+p.y>0)
                     p.y=0;
-                //---------------------------------------------
-                //Reinicio que pueda ser punteada
+                //Reinicio la pipe para que vuelva a dar punto una vez haya salido de la pantalla
                 punto=false;
-                if(realGAP <=2.5)
+                //DIFICULTAD DEL JUEGO PROGRESIVA
+                if(realGAP <=3.5)
                     realGAP+=0.1f;
             }
         }

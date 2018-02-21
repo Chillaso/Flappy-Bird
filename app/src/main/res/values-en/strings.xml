@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flappy Bird</string>
+    <string name="jugar">Play</string>
+    <string name="opciones">Settings</string>
+    <string name="musica">Music</string>
+    <string name="noche">Night mode</string>
+    <string name="delete">Delete records</string>
+</resources>

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Flappy Bird</string>
+    <string name="jugar">Jugar</string>
+    <string name="record" translatable="false">Record</string>
+    <string name="opciones">Opciones</string>
+    <string name="musica">Música</string>
+    <string name="noche">Modo noche</string>
+    <string name="delete">Eliminar records</string>
 </resources>
