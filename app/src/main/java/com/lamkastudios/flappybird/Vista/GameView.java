@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.lamkastudios.flappybird.DAO.GuardarPuntuacion;
 import com.lamkastudios.flappybird.Logic.GameLoop;
 import com.lamkastudios.flappybird.R;
 import com.lamkastudios.flappybird.Sprites.Background;
@@ -65,7 +66,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         pipes = new ArrayList<>();
         puntos = new ArrayList<>();
         sonidoAla =-1;
-
     }
 
     @Override
@@ -239,6 +239,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         score.onDraw(c);
         replay.onDraw(c);
         gameOver=true;
+        GuardarPuntuacion guardar = new GuardarPuntuacion(m,punto.getContPuntos());
+        guardar.execute();
     }
 
     public void rePlay()
@@ -254,4 +256,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     public Punto getPunto() {
         return punto;
     }
+
+
 }

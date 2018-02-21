@@ -3,13 +3,10 @@ package com.lamkastudios.flappybird.Sprites;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.util.Log;
 
 import com.lamkastudios.flappybird.Vista.GameView;
 
 import java.util.Random;
-
-import static android.content.ContentValues.TAG;
 
 public class Pipe {
 
@@ -21,7 +18,7 @@ public class Pipe {
     private int screenHeight;
     private GameView game;
     private Random r;
-    private float realGAP = 2;
+    private float realGAP = 2.2f;
     private boolean punto;
 
     public Pipe(GameView game,Bitmap btp, Bitmap btp2, float x, float y)
@@ -49,7 +46,7 @@ public class Pipe {
         {
             if(p.getX()+ GameView.GAP /2<0)
             {
-                p.x= GameView.GAP *2.5f; //Le asigna la X fuera de la pantalla
+                p.x= GameView.GAP *2.5f;//2.5f; //Le asigna la X fuera de la pantalla
                 //-------------EN CAMBIO-----------------------
                 p.y = r.nextInt(GameView.GAP)- GameView.GAP /2;
                 if(-(GameView.GAP /realGAP)+p.y>0)
@@ -57,8 +54,8 @@ public class Pipe {
                 //---------------------------------------------
                 //Reinicio que pueda ser punteada
                 punto=false;
-                if(realGAP <=3.2)
-                    realGAP+=0.2f;
+                if(realGAP <=2.5)
+                    realGAP+=0.1f;
             }
         }
     }
