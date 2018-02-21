@@ -52,6 +52,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
 
     private Score score;
     private Replay replay;
+    private Bitmap carga;
 
     public GameView(MainActivity m,Context context)
     {
@@ -79,6 +80,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         suelo.onDraw(canvas);
         sprite.onDraw(canvas);
         punto.onDraw(canvas);
+
+        if(!play)
+            canvas.drawBitmap(carga,getWidth()/2-carga.getWidth()/2,getHeight()/2-carga.getHeight()/2,null);
 
     }
 
@@ -130,7 +134,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     {
         //------BIRD-------
         //Cremaos un sprite mid, luego iremos cambiando en el update
-        Bitmap btp = BitmapFactory.decodeResource(getResources(),R.drawable.medio);
+        Bitmap btp = BitmapFactory.decodeResource(getResources(),R.drawable.abajo);
         int ancho = (int) (getWidth()*ANCHO);
         int alto = (int) (getHeight()*ALTO);
         sprite = new Sprite(this,Bitmap.createScaledBitmap(btp,ancho,alto,true));
@@ -188,11 +192,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         Bitmap pArriba = Bitmap.createScaledBitmap(pUp, pUp.getWidth(), this.getHeight() / 2, true);
 
 
-        float distancia = sprite.getX()*4;
+        float distancia = sprite.getX()*3;
 
         pipes.add(new Pipe(this, pAbajo, pArriba,distancia,pUp.getHeight()-getHeight()/2f));
         pipes.add(new Pipe(this, pAbajo, pArriba,distancia+GAP,pUp.getHeight()-getHeight()/2.2f));
         pipes.add(new Pipe(this, pAbajo, pArriba,distancia+GAP*2,pUp.getHeight()-getHeight()/2.123f));
+
+        //----PANTALLA CARGA----
+        carga = BitmapFactory.decodeResource(getResources(),R.drawable.carga);
     }
 
     private void cargarSonidos()

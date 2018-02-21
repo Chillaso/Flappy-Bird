@@ -4,6 +4,8 @@ package com.lamkastudios.flappybird.Sprites;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 import com.lamkastudios.flappybird.Vista.GameView;
 
@@ -13,12 +15,17 @@ public class Score {
     private int puntuacion;
     private Bitmap btp;
     private GameView game;
+    private Paint p;
 
     public Score(GameView game, Bitmap btp, float x, float y) {
         this.game=game;
         this.x = x;
         this.y = y;
         this.btp = btp;
+        p = new Paint();
+        p.setTextSize(42);
+        p.setStyle(Paint.Style.STROKE);
+        p.setColor(Color.BLACK);
     }
 
     private void update()
@@ -32,6 +39,6 @@ public class Score {
         //Caja del score
         c.drawBitmap(btp,x,y,null);
         //Puntuación obtenida
-        c.drawText(String.valueOf(puntuacion),x+50,y+50,null);
+        c.drawText(String.valueOf(puntuacion),x+(btp.getWidth()/1.3f),y+(btp.getHeight()/2.4f),p);
     }
 }

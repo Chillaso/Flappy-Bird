@@ -40,8 +40,8 @@ public class Sprite
         height=btp.getHeight();
 
         //-----POSICIÓN DE INICIO-----
-        x=game.getWidth()/4;
-        y=game.getHeight()/2;
+        x=game.getWidth()/2.2f;
+        y=game.getHeight()/1.8f;
 
         punto=0;
 
