@@ -12,7 +12,7 @@ public class Background {
     private GameView game;
     private Bitmap fondo;
 
-    private int x = 0;
+    private float x = 0;
 
     public Background(GameView game, Bitmap fondo)
     {
@@ -26,7 +26,7 @@ public class Background {
         x = x - game.VELOCIDAD;
 
         //Calculamos el hueco que deja el fondo
-        int xGap = fondo.getWidth() - (-x);
+        float xGap = fondo.getWidth() - (-x);
 
         //Pintamos el fondo normal si no hay hueco que pintar
         if (xGap <= 0)

@@ -19,7 +19,7 @@ public class Pipe {
     private float width;
     private int screenHeight;
     //Modificar para cambiar dificultad
-    private float realGAP = 2.4f;
+    private float realGAP = 2.5f;
     private boolean punto;
     private Random r;
 
@@ -55,10 +55,10 @@ public class Pipe {
                 //Reinicio la pipe para que vuelva a dar punto una vez haya salido de la pantalla
                 punto=false;
                 //DIFICULTAD DEL JUEGO PROGRESIVA
-                if(realGAP <=3.5)
-                    realGAP+=0.1f;
-                if(game.getPunto().getContPuntos() > 50)
-                    GameView.VELOCIDAD+=0.1;
+                if(realGAP <=3.8f)
+                    realGAP+=0.2f;
+                if(game.getPunto().getContPuntos() > 25 && GameView.VELOCIDAD<=13)
+                    GameView.VELOCIDAD+=0.5;
             }
         }
     }

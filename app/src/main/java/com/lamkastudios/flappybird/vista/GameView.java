@@ -37,7 +37,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
     private final double ANCHO =0.1;
     private final double ALTO=0.1;
     public final static int GAP = 500;
-    public static int VELOCIDAD = 10;
+    public static float VELOCIDAD = 10;
 
     //----FLAGS-----
     private boolean play;
@@ -71,6 +71,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         puntos = new ArrayList<>();
         medallas= new ArrayList<>();
         prefs = m.getSharedPreferences("puntuaciones",Context.MODE_PRIVATE);
+        VELOCIDAD = 10;
     }
 
     @Override
@@ -255,6 +256,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback
         gameOver=true;
         GuardarPuntuacion guardar = new GuardarPuntuacion(m,punto.getContPuntos());
         guardar.execute();
+        VELOCIDAD=10;
     }
 
     public void rePlay()

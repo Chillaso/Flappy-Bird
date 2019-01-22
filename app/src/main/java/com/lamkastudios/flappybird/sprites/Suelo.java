@@ -10,7 +10,7 @@ public class Suelo {
 
     private GameView game;
     protected static Bitmap suelo;
-    private int x = 0;
+    private float x = 0;
     protected static int y;
 
     public Suelo(GameView game, Bitmap suelo)
@@ -25,7 +25,7 @@ public class Suelo {
         x = x - game.VELOCIDAD;
 
         //Calculamos el hueco que deja el suelo
-        int xGap = suelo.getWidth() - (-x);
+        float xGap = suelo.getWidth() - (-x);
         //Calculamos donde posicionar el suelo
         y = game.getHeight()-suelo.getHeight();
 
